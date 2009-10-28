@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Main</string>
+    <string name="app_name">Telka</string>
+<string name="add_notification">Přidat upozornění</string>
+<string name="context_menu_header">Menu</string>
+<string name="run_to_TV">Honem k telce!</string>
+<string name="just_starts"> právě začíná!</string>
+<string name="added_notification">Upozornění uloženo</string>
+<string name="loading">TV program se nahrává...</string>
+</resources>
