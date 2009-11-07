@@ -26,7 +26,6 @@ public class ImageCache16 extends ImageCache {
 
 
 	protected Drawable fetchImage(String iconUrl, Context ctx) {
-		System.out.println("FETCHED by 1.6");
 		DisplayMetrics metrics = new DisplayMetrics();
 		((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(metrics);
 		Log.i("Main", "fetching " + iconUrl);
