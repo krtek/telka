@@ -15,7 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cz.krtinec.telka.Constants;
 import cz.krtinec.telka.ImageCache;
+import cz.krtinec.telka.ImageCache16;
 import cz.krtinec.telka.R;
+import cz.krtinec.telka.CompatibilityUtils;
 import cz.krtinec.telka.dto.Programme;
 import cz.krtinec.telka.dto.State;
 
@@ -106,7 +108,12 @@ public class ProgrammeView extends LinearLayout {
 		}
 		@Override
 		public void run() {
-			final Drawable drawable = ImageCache.getInstance().getImage(url);
+			final Drawable drawable;
+			if (CompatibilityUtils.hasSettingTargetDensityOnBitmapDrawable()) {
+				drawable = ImageCache16.getInstance().getImage(url, getContext());
+			}else{
+				drawable = ImageCache.getInstance().getImage(url, getContext());
+			}
 			handler.post(new Runnable() {
 
 				public void run() {
