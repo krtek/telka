@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ public class ImageCache {
 	
 	private Map<String, Drawable> cache;
 
-	private ImageCache() {
+	protected ImageCache() {
 		this.cache = new WeakHashMap<String, Drawable>();
 	}
 	
@@ -23,16 +24,20 @@ public class ImageCache {
 		return instance;
 	}
 	
-	public Drawable getImage(String url) {
+	public Drawable getImage(String url, Context ctx) {
 		Drawable d = cache.get(url);
 		if (d == null) {
-			d = fetchImage(url);			
+			d = this.fetchImage(url, ctx);			
 			cache.put(url, d);
 		}
 		return d;
 	}
 	
-	private Drawable fetchImage(String iconUrl) {
+	protected Drawable fetchImage(String iconUrl) {
+		return this.fetchImage(iconUrl, null);
+	}
+	
+	private Drawable fetchImage(String iconUrl, Context ctx) {
 		Log.i("Main", "fetching " + iconUrl);
 		
 		URL url;
