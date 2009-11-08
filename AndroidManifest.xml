@@ -16,9 +16,9 @@
 
 <uses-permission android:name="android.permission.VIBRATE"/>
 <uses-permission android:name="android.permission.WAKE_LOCK"/>
+<!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>  -->
 
 <supports-screens anyDensity="false" />	
 
 <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="4" />
-
 </manifest> 

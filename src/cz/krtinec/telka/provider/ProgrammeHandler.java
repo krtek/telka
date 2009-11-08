@@ -18,7 +18,6 @@ import android.util.Log;
 import cz.krtinec.telka.Constants;
 import cz.krtinec.telka.dto.Channel;
 import cz.krtinec.telka.dto.Programme;
-import cz.krtinec.telka.dto.State;
 
 class ProgrammeHandler extends DefaultHandler {
 	private static final String PROGRAMME = "programme";
@@ -34,8 +33,7 @@ class ProgrammeHandler extends DefaultHandler {
 	//2009041523250 +0100
 	private DateFormat format;
 	
-	private static final boolean DLS = TimeZone.getDefault().inDaylightTime(new Date());
-	private static final Date NOW = new Date(); 
+	private static final boolean DLS = TimeZone.getDefault().inDaylightTime(new Date());	
 	
 	public ProgrammeHandler() {
 		super();
@@ -68,19 +66,19 @@ class ProgrammeHandler extends DefaultHandler {
 			throws SAXException {
 		//Log.d("ProgrammeHandler", "end element: " + localName + ", " + name);
 		if (localName.equals(PROGRAMME)) {
-			if (currentProgramme.stop.compareTo(NOW) < 0) {
-				currentProgramme.state = State.OVER;
-			} else if (currentProgramme.start.compareTo(NOW) > 0) {
-				currentProgramme.state = State.WILL_RUN;
-			} else {
-				currentProgramme.state = State.RUNNING;
-			}
+			currentProgramme.state = ProviderUtils.determineState(
+					currentProgramme.start, currentProgramme.stop);
+			/*
+			Log.d("ProgrammeHandler", currentProgramme.title + ", Start: " + currentProgramme.start + 
+					", Stop: " + currentProgramme.stop + ", State: " + currentProgramme.state);
+			*/
 			channels.get(processingChannel).add(currentProgramme);
 		} else if (localName.equals(CHANNEL)) {
 			channels.put(currentChannel, new ArrayList<Programme>());
 		}
 		
 	}
+
 
 	public void startDocument() throws SAXException {
 		Log.d("ProgrammeHandler", "start document");

@@ -38,7 +38,6 @@ public class ImageCache {
 	}
 	
 	private Drawable fetchImage(String iconUrl, Context ctx) {
-		Log.i("Main", "fetching " + iconUrl);
 		
 		URL url;
 		try {

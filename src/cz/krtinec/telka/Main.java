@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -48,7 +49,7 @@ public class Main extends ListActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);                
         setContentView(R.layout.main);        
         dialog = ProgressDialog.show(this, "Telka", getString(R.string.loading), true);
 
@@ -61,8 +62,29 @@ public class Main extends ListActivity {
         
         this.detector = new GestureDetector(this, new MyGesturesDetector(this));
         this.detector.setIsLongpressEnabled(true);        
-    }   
+    }  
+    
+    
         
+	@Override
+	protected void onStart() {
+		super.onStart();
+		/*
+		 * To enable tracing, android.permission.WRITE_EXTERNAL_STORAGE must be set to true! 
+		 */
+		//Debug.startMethodTracing("telka");
+	}
+
+
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		//Debug.stopMethodTracing();
+	}
+
+
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt(CURRENT_CHANNEL_KEY, currentChannel);

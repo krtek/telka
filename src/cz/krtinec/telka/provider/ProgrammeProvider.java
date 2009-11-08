@@ -65,15 +65,14 @@ public class ProgrammeProvider implements IProgrammeProvider {
 	
 	public Integer nowPlaying(Channel channel) {
 		List<Programme> programmes = channels.get(channel);
-		int i = 0;
-		Date now = new Date();
+		int i = 0;		
 		for (Programme p : programmes) {			
-			if (p.start.compareTo(now) < 0 && p.stop.compareTo(now) > 0) {
+			if (p.state.isRunning()) {
 				return i;
 			}
 			i++;
 		}
-		return 0;
+		return i;
 	}
 
 	private Map<Channel, List<Programme>> loadChannels() {
