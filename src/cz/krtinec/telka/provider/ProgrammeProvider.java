@@ -42,14 +42,16 @@ public class ProgrammeProvider implements IProgrammeProvider {
 	private Context context = null;
 	private static final String URL = 
 		"http://xmltv.arcao.com/xml.php?gids[]=ct1.ceskatelevize.cz&" +
-			"gids[]=ct2.ceskatelevize.cz&" +
-			"gids[]=nova.nova.cz&" +
-			"gids[]=prima.iprima.cz&" +
-			"gids[]=ct24.ct24.cz&" +
-			"gids[]=ct4sport.ct24.cz&" +
-			"gids[]=ocko.idnes.cz&" +
-			"gids[]=cinema.nova.cz&" +
-			"gids[]=cinema.nova.cz";
+		"gids[]=ct2.ceskatelevize.cz&" +
+		"gids[]=nova.nova.cz&" +
+		"gids[]=prima.iprima.cz&" +
+		"gids[]=cool.iprima.cz&" +
+		"gids[]=ct24.ct24.cz&" +
+		"gids[]=ct4sport.ct24.cz&" +
+		"gids[]=ocko.idnes.cz&" +
+		"gids[]=sport.nova.cz&" +
+		"gids[]=cinema.nova.cz&" +
+		"gids[]=mtv.nova.cz";
 
 	public ProgrammeProvider(Context context) {
 		this.context = context;
