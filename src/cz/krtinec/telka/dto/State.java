@@ -1,8 +1,8 @@
 package cz.krtinec.telka.dto;
 
-import android.util.AttributeSet;
+import java.io.Serializable;
 
-public enum State {
+public enum State implements Serializable {
 	OVER("Over"),    	//uz bezel
 	RUNNING("Running"),	//bezi
 	WILL_RUN("Will run");	//pobezi

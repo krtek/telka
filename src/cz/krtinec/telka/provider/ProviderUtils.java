@@ -5,12 +5,14 @@ import java.util.Date;
 import cz.krtinec.telka.dto.State;
 
 public class ProviderUtils {
-	static State determineState(Date start, Date stop) {
-		final Date NOW = new Date();
+	static final Date NOW = new Date();
 		
-		if (stop.compareTo(NOW) < 0) {
+	public static final State determineState(Date start, Date stop) {		
+		
+		final int compareTo = stop.compareTo(NOW);
+		if (compareTo < 0) {
 			return State.OVER;
-		} else if (start.compareTo(NOW) > 0) {
+		} else if (compareTo > 0) {
 			return State.WILL_RUN;
 		} else {
 			return State.RUNNING;

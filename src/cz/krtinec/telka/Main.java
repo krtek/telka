@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
@@ -20,6 +21,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import cz.krtinec.telka.dto.Channel;
 import cz.krtinec.telka.dto.Programme;
+import cz.krtinec.telka.provider.ProgrammeProvider;
 import cz.krtinec.telka.ui.ProgrammeView;
 import cz.krtinec.telka.ui.ScrollableListView;
 
@@ -44,6 +47,8 @@ public class Main extends ListActivity {
 	private GestureDetector detector;
 	ProgressDialog dialog;
 	private Handler handler = new Handler();
+	
+	private static final int RELOAD_MENU = 0;
 	
 	
     /** Called when the activity is first created. */
@@ -65,7 +70,40 @@ public class Main extends ListActivity {
     }  
     
     
+    
         
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, RELOAD_MENU, 0, R.string.reload).setIcon(android.R.drawable.ic_menu_revert);
+		return true;
+	}
+
+
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case RELOAD_MENU: 		
+			final ProgressDialog dialog = ProgressDialog.show(this, "Telka", getString(R.string.loading), true);
+			final Context context = this;
+			Runnable reloadThread = new Runnable() {
+				@Override
+				public void run() {
+					ProviderFactory.getProvider(context).reload();
+					dialog.cancel();
+				}				
+			};			
+			new Thread(reloadThread).start();
+			
+			return true;		
+		}
+		return false;
+	}
+
+
+
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -80,7 +118,7 @@ public class Main extends ListActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		//Debug.stopMethodTracing();
+//		Debug.stopMethodTracing();		
 	}
 
 
@@ -135,7 +173,7 @@ public class Main extends ListActivity {
 
 		@Override
 		public void run() {
-	        provider = ProviderFactory.getProvider();
+	        provider = ProviderFactory.getProvider(context);
 	        channels = provider.getEnabledChannels().toArray(
 	        		new Channel[provider.getEnabledChannels().size()]);
 	        

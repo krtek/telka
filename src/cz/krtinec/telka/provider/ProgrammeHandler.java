@@ -66,8 +66,6 @@ class ProgrammeHandler extends DefaultHandler {
 			throws SAXException {
 		//Log.d("ProgrammeHandler", "end element: " + localName + ", " + name);
 		if (localName.equals(PROGRAMME)) {
-			currentProgramme.state = ProviderUtils.determineState(
-					currentProgramme.start, currentProgramme.stop);
 			/*
 			Log.d("ProgrammeHandler", currentProgramme.title + ", Start: " + currentProgramme.start + 
 					", Stop: " + currentProgramme.stop + ", State: " + currentProgramme.state);

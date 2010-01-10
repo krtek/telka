@@ -18,7 +18,7 @@ public class ProgressIndicator extends View {
 	private Rect maxSize = new Rect();
 	private Rect innerSize = new Rect();
 	private boolean running;
-	private int percent;
+	private int percent;	
 		
 	public ProgressIndicator(Context context, boolean running, int percent) {
 		super(context);
@@ -40,8 +40,8 @@ public class ProgressIndicator extends View {
 
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right,
-			int bottom) {
-		if (changed) {
+			int bottom) {	
+		if (changed) {			
 			maxSize.set(5, 0, right - 15, PROGRESS_WIDTH);
 			outer.setBounds(maxSize);
 			innerSize = determineInnerBounds(maxSize);
@@ -49,7 +49,9 @@ public class ProgressIndicator extends View {
 			Rect progressRect = determineProgressBounds(innerSize);
 			if (progressRect != null) {
 				this.progress.setBounds(progressRect);
-			}
+			} else {
+				this.progress.setBounds(0,0,0,0);
+			}			
 		}
 	}
 
@@ -68,11 +70,11 @@ public class ProgressIndicator extends View {
 	}
 	
 	public void setPercent(int percent) {
-		this.percent = percent;
+		this.percent = percent;		
 	}
 	
 	public void setRunning(boolean running) {
-		this.running = running;
+		this.running = running;		
 	}
 	
 }

@@ -8,4 +8,5 @@
 <string name="just_starts"> právě začíná!</string>
 <string name="added_notification">Upozornění uloženo</string>
 <string name="loading">TV program se nahrává...</string>
+<string name="reload">Aktualizovat program</string>
 </resources>

@@ -2,6 +2,8 @@ package cz.krtinec.telka.ui;
 
 import java.util.Date;
 
+import android.util.Log;
+
 public class UIUtils {
 	
 	static int determinePercent(Date start, Date stop) {
@@ -12,7 +14,7 @@ public class UIUtils {
 		
 		double onePercent = length / 100;
 		int percent = (int) (actual / onePercent);
-		//Log.d("ProgrammeView", p.start + " - " + p.stop + ":" + percent);
+		Log.d("UIUtils", start + " - " + stop + ":" + percent);
 		return percent;
 		
 	}

@@ -1,8 +1,11 @@
 package cz.krtinec.telka.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Programme {
+import cz.krtinec.telka.provider.ProviderUtils;
+
+public class Programme implements Serializable {
 	public Date start;
 	public Date stop;
 	public String title;
@@ -10,7 +13,7 @@ public class Programme {
 	public String iconURL;
 	public String channelId;
 	public String vps;
-	public State state;
+	private transient State state;
 	
 	
 	@Override
@@ -48,4 +51,11 @@ public class Programme {
 			return false;
 		return true;
 	}
+	
+	public State getState() {
+		if (this.state == null) {
+			this.state = ProviderUtils.determineState(this.start, this.stop);
+		}
+		return this.state;
+	}	
 }

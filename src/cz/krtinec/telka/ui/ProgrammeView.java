@@ -58,7 +58,7 @@ public class ProgrammeView extends LinearLayout {
         title.setTextSize(20);
         title.setText(programme.title);
         
-        final int textColor = determineColor(programme.state);
+        final int textColor = determineColor(programme.getState());
 		title.setTextColor(textColor);
         
 		        
@@ -75,8 +75,8 @@ public class ProgrammeView extends LinearLayout {
         text.addView(time, new LinearLayout.LayoutParams(
                 LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
         
-        progress = new ProgressIndicator(context, programme.state.isRunning(), 
-        		programme.state.isRunning() ? determinePercent(programme.start, programme.stop) : 0);
+        progress = new ProgressIndicator(context, programme.getState().isRunning(), 
+        		programme.getState().isRunning() ? determinePercent(programme.start, programme.stop) : 0);
                         
         text.addView(progress, LayoutParams.FILL_PARENT, PROGRESS_WIDTH);        
         
@@ -114,16 +114,19 @@ public class ProgrammeView extends LinearLayout {
 	
 	public void setProgramme(Programme p) {
 		this.title.setText(p.title);
-		final int textColor = determineColor(p.state);		
+		final int textColor = determineColor(p.getState());		
 		this.title.setTextColor(textColor);
 		this.desc.setText(p.description);
 		this.desc.setTextColor(textColor);
 		this.time.setText(formatTime(p.start, p.stop));
-		this.time.setTextColor(textColor);
-		this.progress.setRunning(p.state.isRunning());
-		if (p.state.isRunning()) {
+		this.time.setTextColor(textColor);		
+		this.progress.setRunning(p.getState().isRunning());
+		if (p.getState().isRunning()) {
 			this.progress.setPercent(determinePercent(p.start, p.stop));
+		} else {
+			this.progress.setPercent(0);			
 		}
+		this.invalidate();
 		
 		this.icon.setImageResource(R.drawable.telka);
 		if (p.iconURL != null && !"".equals(p.iconURL)) {

@@ -1,6 +1,8 @@
 package cz.krtinec.telka.dto;
 
-public class Channel {
+import java.io.Serializable;
+
+public class Channel implements Serializable {
 	public String id;
 	public String displayName;
 	
