@@ -55,6 +55,7 @@ public class Programme implements Serializable {
 	public State getState() {
 		if (this.state == null) {
 			this.state = ProviderUtils.determineState(this.start, this.stop);
+			
 		}
 		return this.state;
 	}	

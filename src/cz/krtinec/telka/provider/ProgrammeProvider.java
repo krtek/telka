@@ -68,6 +68,12 @@ public class ProgrammeProvider implements IProgrammeProvider {
 	public Collection<Channel> getAllChannels() {
 		if (this.holder == null) {
 			this.holder = loadChannels();
+			//determine state...
+			for (Channel ch : holder.channels.keySet()) {
+				for (Programme p: holder.channels.get(ch)) {
+					p.getState();
+				}
+			}
 		}
 		return holder.channels.keySet();
 	}
@@ -100,6 +106,7 @@ public class ProgrammeProvider implements IProgrammeProvider {
 			Log.i(CLASS_NAME, "Programme loaded from cache.");
 			long interval = holder.timestamp - System.currentTimeMillis();
 			if (!(interval > RELOAD_INTERVAL)) {
+				
 				return holder;
 			} else {
 				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], going to load again.");

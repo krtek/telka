@@ -14,7 +14,7 @@ public class UIUtils {
 		
 		double onePercent = length / 100;
 		int percent = (int) (actual / onePercent);
-		Log.d("UIUtils", start + " - " + stop + ":" + percent);
+		//Log.d("UIUtils", start + " - " + stop + ":" + percent);
 		return percent;
 		
 	}
