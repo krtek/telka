@@ -58,5 +58,11 @@ public class Programme implements Serializable {
 			
 		}
 		return this.state;
+	}
+	@Override
+	public String toString() {
+		return this.channelId + ":" + this.title;
 	}	
+	
+	
 }

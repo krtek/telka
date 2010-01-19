@@ -92,11 +92,14 @@ public class ProgrammeProvider implements IProgrammeProvider {
 		int i = 0;		
 		for (Programme p : programmes) {			
 			if (p.getState().isRunning()) {
+				//Log.d("ProgrammeProvider", "isRunning() returns " + p);
 				return i;
+				
 			}
 			i++;
 		}
-		return i;
+		//Log.d("ProgrammeProvider", "isRunning() returns nothing.");
+		return i;		
 	}
 
 	private ChannelCacheHolder loadChannels() {
@@ -105,8 +108,7 @@ public class ProgrammeProvider implements IProgrammeProvider {
 			ChannelCacheHolder holder = (ChannelCacheHolder) ois.readObject();
 			Log.i(CLASS_NAME, "Programme loaded from cache.");
 			long interval = holder.timestamp - System.currentTimeMillis();
-			if (!(interval > RELOAD_INTERVAL)) {
-				
+			if (interval < RELOAD_INTERVAL) {				
 				return holder;
 			} else {
 				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], going to load again.");

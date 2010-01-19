@@ -6,17 +6,15 @@ import android.util.Log;
 
 import cz.krtinec.telka.dto.State;
 
-public class ProviderUtils {
-	static final Date NOW = new Date();
+public class ProviderUtils {	
 		
 	public static final State determineState(Date start, Date stop) {		
-		NOW.setTime(System.currentTimeMillis());
-		final int compareTo = stop.compareTo(NOW);		
-		if (compareTo < 0) {		
+		Date now = new Date();				
+		if (stop.compareTo(now) < 0) {		
 			return State.OVER;
-		} else if (start.compareTo(NOW) > 0) {		
+		} else if (start.compareTo(now) > 0) {		
 			return State.WILL_RUN;
-		} else {		
+		} else {			
 			return State.RUNNING;
 		}			
 	}
