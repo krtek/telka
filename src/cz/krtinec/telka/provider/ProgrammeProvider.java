@@ -107,9 +107,10 @@ public class ProgrammeProvider implements IProgrammeProvider {
 			ObjectInputStream ois = new ObjectInputStream(context.openFileInput(CACHE_FILENAME));
 			ChannelCacheHolder holder = (ChannelCacheHolder) ois.readObject();
 			Log.i(CLASS_NAME, "Programme loaded from cache.");
-			long interval = holder.timestamp - System.currentTimeMillis();
-			if (interval < RELOAD_INTERVAL) {				
-				return holder;
+			long interval = System.currentTimeMillis() - holder.timestamp;
+			if (interval < RELOAD_INTERVAL) {
+				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], reusing.");
+				return holder;				
 			} else {
 				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], going to load again.");
 			}
@@ -158,7 +159,7 @@ public class ProgrammeProvider implements IProgrammeProvider {
 	
 	public void reload() {
 		try {
-			loadChannelsFromNetAndStore();
+			this.holder = loadChannelsFromNetAndStore();
 		} catch (Exception e) {
 			Log.e(CLASS_NAME, "Reload failed");
 		} 

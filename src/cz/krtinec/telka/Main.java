@@ -90,7 +90,7 @@ public class Main extends ListActivity {
 			Runnable reloadThread = new Runnable() {
 				@Override
 				public void run() {
-					ProviderFactory.getProvider(context).reload();
+					ProviderFactory.getProvider(context).reload();					
 					dialog.cancel();
 				}				
 			};			
