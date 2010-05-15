@@ -15,5 +15,7 @@
 -->
 
 <resources>
-    <drawable name="heading">#013ca9</drawable>   
+    <drawable name="topBackground">#fec222</drawable>   
+	<color name="bigText">#af0b0b</color>	
+	<color name="smallText">#fec222</color>
 </resources>

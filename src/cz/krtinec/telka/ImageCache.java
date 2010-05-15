@@ -43,7 +43,7 @@ public class ImageCache {
 		try {
 			url = new URL(iconUrl);
 			InputStream is = (InputStream) url.getContent();
-			Drawable d = Drawable.createFromStream(is, "src");
+			Drawable d = Drawable.createFromStream(is, "src");				
 			return d;
 
 		} catch (IOException e) {

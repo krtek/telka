@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content" android:orientation="vertical">
+<LinearLayout android:id="@+id/LinearLayout03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="2dp">  
+
+<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
+	
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="left" android:id="@+id/time" android:textColor="@color/smallText" android:text="12.00 - 14.00" android:textSize="12dp"></TextView>
+	<LinearLayout android:id="@+id/LinearLayout04" android:layout_height="wrap_content" android:layout_width="wrap_content">
+		<ImageView android:maxWidth="80dp" android:maxHeight="80dp" android:adjustViewBounds="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:scaleType="centerInside" android:id="@+id/Icon" android:src="@drawable/telka"></ImageView>
+	</LinearLayout>	
+
+</LinearLayout>
+<LinearLayout android:id="@+id/LinearLayout02" android:layout_width="wrap_content" android:layout_height="fill_parent" android:orientation="vertical">
+	<ProgressBar android:id="@+id/progress" android:layout_width="200dp" android:layout_height="15dp" android:padding="5dp" style="?android:attr/progressBarStyleHorizontal"></ProgressBar>
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:padding="5dp" android:paddingTop="15dp" android:layout_gravity="center_vertical" android:id="@+id/title" android:text="Titulek" android:textColor="@color/bigText" android:textSize="20dp"></TextView>	
+</LinearLayout>
+</LinearLayout>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="left" android:padding="2dp" android:id="@+id/desc" android:text="Desne dlouhej popis programu" android:textColor="@color/smallText" android:textSize="14dp"></TextView>
+</LinearLayout>

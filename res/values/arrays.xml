@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="notification_values">
+<item>1</item>
+<item>5</item>
+<item>15</item>
+</string-array>
+<string-array name="notification_texts">
+<item>1 minutu předem</item>
+<item>5 minut předem </item>
+<item>15 minut předem</item>
+</string-array>
+<string-array name="reload_values">
+<item>1</item>
+<item>2</item>
+<item>6</item>
+<item>12</item>
+</string-array>
+<string-array name="reload_texts">
+<item>1 hodinu</item>
+<item>2 hodiny</item>
+<item>6 hodin</item>
+<item>Půl dne</item>
+</string-array>
+</resources>

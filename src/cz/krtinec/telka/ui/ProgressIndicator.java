@@ -54,6 +54,13 @@ public class ProgressIndicator extends View {
 			}			
 		}
 	}
+	
+	
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+	}
 
 	private Rect determineProgressBounds(Rect size) {
 		if (!running) {
@@ -71,10 +78,11 @@ public class ProgressIndicator extends View {
 	
 	public void setPercent(int percent) {
 		this.percent = percent;		
+		
 	}
 	
 	public void setRunning(boolean running) {
 		this.running = running;		
-	}
+	}	
 	
 }

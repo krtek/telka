@@ -9,4 +9,6 @@
 <string name="added_notification">Upozornění uloženo</string>
 <string name="loading">TV program se nahrává...</string>
 <string name="reload">Aktualizovat program</string>
+<string name="pref_notif_interval">Jak dlouho před pořadem upozornit?</string>
+<string name="preferences">Nastavení</string>
 </resources>

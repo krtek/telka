@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<ListPreference 	 
+	android:entryValues="@array/notification_values" 
+	android:entries="@array/notification_texts" 
+	android:dialogIcon="@drawable/telka" 
+	android:dialogTitle="Upozornit:" 
+	android:title="Upozornění" 
+	android:summary="Jak dlouho před začátkem pořadu upozornit?" 
+	android:key="notification.interval" 
+	android:persistent="true" 
+	android:defaultValue="5"></ListPreference>
+<ListPreference 	 
+	android:entryValues="@array/reload_values" 
+	android:entries="@array/reload_texts" 
+	android:dialogIcon="@drawable/telka" 
+	android:dialogTitle="Starší než:" 
+	android:title="Aktualizace programu" 
+	android:summary="Pokud je uložený program starší než nastavený interval, stáhne se z internetu." 
+	android:key="reload.interval" 
+	android:persistent="true" 
+	android:defaultValue="6">
+	</ListPreference>
+</PreferenceScreen>

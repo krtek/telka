@@ -20,6 +20,7 @@ import java.util.Map;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml;
 
@@ -34,8 +35,7 @@ import cz.krtinec.telka.dto.Programme;
  *
  */
 public class ProgrammeProvider implements IProgrammeProvider {
-	
-	private static final int RELOAD_INTERVAL = 1000 * 60 * 60;
+		
 	private static final String CACHE_FILENAME = "program.cache";
 	private static final String CLASS_NAME = ProgrammeProvider.class.getSimpleName();
 	private ChannelCacheHolder holder = null;
@@ -65,9 +65,9 @@ public class ProgrammeProvider implements IProgrammeProvider {
 		throw new NoSuchMethodError("Not yet implemented!");
 	}
 
-	public Collection<Channel> getAllChannels() {
+	public Collection<Channel> getAllChannels(int reloadInterval) {
 		if (this.holder == null) {
-			this.holder = loadChannels();
+			this.holder = loadChannels(reloadInterval);
 			//determine state...
 			for (Channel ch : holder.channels.keySet()) {
 				for (Programme p: holder.channels.get(ch)) {
@@ -78,8 +78,8 @@ public class ProgrammeProvider implements IProgrammeProvider {
 		return holder.channels.keySet();
 	}
 
-	public Collection<Channel> getEnabledChannels() {
-		return getAllChannels();
+	public Collection<Channel> getEnabledChannels(int reloadInterval) {
+		return getAllChannels(reloadInterval);
 	}
 
 	public List<Programme> getProgrammes(Channel channel) {
@@ -102,13 +102,14 @@ public class ProgrammeProvider implements IProgrammeProvider {
 		return i;		
 	}
 
-	private ChannelCacheHolder loadChannels() {
-		try {
+	private ChannelCacheHolder loadChannels(int reloadInterval) {
+		Log.i(CLASS_NAME, "ReloadInterval: " + reloadInterval);
+		try {			
 			ObjectInputStream ois = new ObjectInputStream(context.openFileInput(CACHE_FILENAME));
 			ChannelCacheHolder holder = (ChannelCacheHolder) ois.readObject();
 			Log.i(CLASS_NAME, "Programme loaded from cache.");
 			long interval = System.currentTimeMillis() - holder.timestamp;
-			if (interval < RELOAD_INTERVAL) {
+			if (interval < reloadInterval) {
 				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], reusing.");
 				return holder;				
 			} else {

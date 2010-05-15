@@ -1,6 +1,7 @@
 package cz.krtinec.telka;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.GestureDetector;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -37,6 +40,7 @@ import cz.krtinec.telka.dto.Programme;
 import cz.krtinec.telka.provider.ProgrammeProvider;
 import cz.krtinec.telka.ui.ProgrammeView;
 import cz.krtinec.telka.ui.ScrollableListView;
+import cz.krtinec.telka.ui.TelkaPreferences;
 
 public class Main extends ListActivity {
 	private static final String CURRENT_CHANNEL_KEY = "currentChannel";
@@ -49,6 +53,7 @@ public class Main extends ListActivity {
 	private Handler handler = new Handler();
 	
 	private static final int RELOAD_MENU = 0;
+	private static final int PREFS_MENU = 1;
 	
 	
     /** Called when the activity is first created. */
@@ -57,6 +62,7 @@ public class Main extends ListActivity {
         super.onCreate(savedInstanceState);                
         setContentView(R.layout.main);        
         dialog = ProgressDialog.show(this, "Telka", getString(R.string.loading), true);
+        //requestWindowFeature(Window.FEATURE_PROGRESS);
 
         currentChannel = 0;
         if (savedInstanceState != null) {
@@ -74,7 +80,8 @@ public class Main extends ListActivity {
         
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, RELOAD_MENU, 0, R.string.reload).setIcon(android.R.drawable.ic_menu_revert);
+		menu.add(Menu.NONE, RELOAD_MENU, 0, R.string.reload).setIcon(R.drawable.ic_menu_refresh);
+		menu.add(Menu.NONE, PREFS_MENU, 1, R.string.preferences).setIcon(android.R.drawable.ic_menu_preferences);		
 		return true;
 	}
 
@@ -84,7 +91,7 @@ public class Main extends ListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case RELOAD_MENU: 		
+		case RELOAD_MENU: { 		
 			final ProgressDialog dialog = ProgressDialog.show(this, "Telka", getString(R.string.loading), true);
 			final Context context = this;
 			Runnable reloadThread = new Runnable() {
@@ -96,9 +103,15 @@ public class Main extends ListActivity {
 			};			
 			new Thread(reloadThread).start();
 			
-			return true;		
+			return true;			
 		}
+		case PREFS_MENU: {
+			Intent settingsActivity = new Intent(getBaseContext(), TelkaPreferences.class);			
+			startActivity(settingsActivity);
+			return true;
+		}}
 		return false;
+		
 	}
 
 
@@ -131,8 +144,10 @@ public class Main extends ListActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        Programme p = provider.getProgrammes(channels[currentChannel]).get(info.position); 
-        addNotification(p);
+        Programme p = provider.getProgrammes(channels[currentChannel]).get(info.position);
+        String nInterval = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("notification.interval", "5");
+        
+        addNotification(p, Integer.parseInt(nInterval) * 60 * 1000);
         //Toast.makeText(this, "Item: " + p.title, Toast.LENGTH_SHORT).show();        	
         return true; 
 	}
@@ -148,7 +163,7 @@ public class Main extends ListActivity {
 		lw.setSelection(position);
 	}
 	
-	private void addNotification(Programme p) {
+	private void addNotification(Programme p, int notificationInterval) {
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, AlarmReceiver.class);
 		intent.putExtra(Constants.SHOW_NAME, p.title);
@@ -159,23 +174,29 @@ public class Main extends ListActivity {
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 		//Log.i("Main", "PendingIntent: " + pendingIntent);
 		
-		am.set(AlarmManager.RTC_WAKEUP, p.start.getTime() - 5 * 60 * 1000, pendingIntent);
+		Log.i("Main", "Will notify " + notificationInterval + " [ms] before start.");
+		am.set(AlarmManager.RTC_WAKEUP, p.start.getTime() - notificationInterval, pendingIntent);
 		//am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5 * 60 * 1000, pendingIntent);
 		Toast.makeText(this, R.string.added_notification, Toast.LENGTH_SHORT).show(); 
 	}
 
 	class StartupThread extends Thread {
 		private Context context;
+		private int reloadInterval;
 		
 		public StartupThread(Context context) {
 			this.context = context;
+			String sInterval = PreferenceManager.getDefaultSharedPreferences(context).getString("reload.interval", "6");
+			this.reloadInterval = Integer.parseInt(sInterval) * 60 * 1000;
 		}
 
 		@Override
 		public void run() {
 	        provider = ProviderFactory.getProvider(context);
-	        channels = provider.getEnabledChannels().toArray(
-	        		new Channel[provider.getEnabledChannels().size()]);
+	        
+	        final Collection<Channel> enabledChannels = provider.getEnabledChannels(this.reloadInterval);
+			channels = enabledChannels.toArray(
+	        		new Channel[enabledChannels.size()]);
 	        
 	        Arrays.sort(channels, new Comparator<Channel>() {
 				public int compare(Channel o1, Channel o2) {
