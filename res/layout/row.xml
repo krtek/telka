@@ -7,8 +7,8 @@
 
 <LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
 	
-	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="left" android:id="@+id/time" android:textColor="@color/smallText" android:text="12.00 - 14.00" android:textSize="12dp"></TextView>
-	<LinearLayout android:id="@+id/LinearLayout04" android:layout_height="wrap_content" android:layout_width="wrap_content">
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="left" android:id="@+id/time" android:textColor="@color/smallText" android:text="12.00 - 14.00" android:textSize="14dp"  android:textStyle="bold"></TextView>
+	<LinearLayout android:id="@+id/LinearLayout04" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_gravity="center">
 		<ImageView android:maxWidth="80dp" android:maxHeight="80dp" android:adjustViewBounds="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:scaleType="centerInside" android:id="@+id/Icon" android:src="@drawable/telka"></ImageView>
 	</LinearLayout>	
 
