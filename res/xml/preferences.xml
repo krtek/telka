@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 <ListPreference 	 
 	android:entryValues="@array/notification_values" 
 	android:entries="@array/notification_texts" 
@@ -22,4 +21,6 @@
 	android:persistent="true" 
 	android:defaultValue="6">
 	</ListPreference>
+<CheckBoxPreference android:title="Používat obrázky" android:disableDependentsState="false" android:key="load.images" android:defaultValue="true" android:summaryOn="Používají se obrázky" android:summaryOff="Obrázky jsou vypnuté"></CheckBoxPreference>
+<CheckBoxPreference android:title="Používat urlimg.com" android:dependency="load.images" android:key="use.urlimg.com" android:defaultValue="true" android:summaryOn="Obrázky se stahují z urlimg.com" android:summaryOff="Obrázky se stahují přímo z webu televize"></CheckBoxPreference>
 </PreferenceScreen>

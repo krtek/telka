@@ -12,7 +12,6 @@ public class Programme implements Serializable {
 	public String description;
 	public String iconURL;
 	public String channelId;
-	public String vps;
 	private transient State state;
 	
 	

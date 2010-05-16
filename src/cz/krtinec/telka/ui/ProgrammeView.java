@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,12 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import cz.krtinec.telka.ImageCache;
-import cz.krtinec.telka.ImageCache16;
 import cz.krtinec.telka.R;
-import cz.krtinec.telka.CompatibilityUtils;
 import cz.krtinec.telka.dto.Programme;
 import cz.krtinec.telka.dto.State;
+import cz.krtinec.telka.images.CompatibilityUtils;
+import cz.krtinec.telka.images.ImageCache;
+import cz.krtinec.telka.images.ImageCache16;
 
 import static cz.krtinec.telka.ui.UIUtils.determinePercent;
 
@@ -40,7 +41,7 @@ public class ProgrammeView extends LinearLayout {
 	private static final DateFormat FORMAT = new SimpleDateFormat("HH:mm"); 
 	
 	public ProgrammeView(Context context, Programme programme) {			
-		super(context);
+		super(context);		
 		 LayoutInflater vi = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		 View v = vi.inflate(R.layout.row, null);
 		 title = (TextView) v.findViewById(R.id.title);
@@ -50,7 +51,8 @@ public class ProgrammeView extends LinearLayout {
 		 time = (TextView) v.findViewById(R.id.time);
 		 time.setText(formatTime(programme.start, programme.stop));
 		 icon = (ImageView) v.findViewById(R.id.Icon);
-         if (programme.iconURL != null && !"".equals(programme.iconURL)) {
+		 boolean loadImages = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("load.images", true);
+         if (loadImages && programme.iconURL != null && !"".equals(programme.iconURL)) {
              new IconLoaderThread(handler, icon, programme.iconURL).start();
          }
 		 progress = (ProgressBar) v.findViewById(R.id.progress);
@@ -79,7 +81,8 @@ public class ProgrammeView extends LinearLayout {
 		}		
 		
 		this.icon.setImageResource(R.drawable.telka);
-		if (p.iconURL != null && !"".equals(p.iconURL)) {
+		boolean loadImages = PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("load.images", true);
+		if (loadImages && p.iconURL != null && !"".equals(p.iconURL)) {
 			new IconLoaderThread(handler, this.icon, p.iconURL).start();
 		}
 	}
@@ -96,11 +99,8 @@ public class ProgrammeView extends LinearLayout {
 		@Override
 		public void run() {
 			final Drawable drawable;
-			if (CompatibilityUtils.hasSettingTargetDensityOnBitmapDrawable()) {
-				drawable = ImageCache16.getInstance().getImage(url, getContext());
-			}else{
-				drawable = ImageCache.getInstance().getImage(url, getContext());
-			}
+						
+			drawable = ImageCache.getInstance().getImage(url, getContext());			
 			handler.post(new Runnable() {
 
 				public void run() {

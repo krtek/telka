@@ -1,4 +1,4 @@
-package cz.krtinec.telka;
+package cz.krtinec.telka.images;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;

@@ -31,16 +31,15 @@ class ProgrammeHandler extends DefaultHandler {
 	private Channel processingChannel = new Channel("null");
 	private String element;
 	//2009041523250 +0100
-	private DateFormat format;
+	private static final DateFormat FORMAT = new SimpleDateFormat("yyyyMMddHHmmss ZZZZZ");
 	
 	private static final boolean DLS = TimeZone.getDefault().inDaylightTime(new Date());	
 	
 	public ProgrammeHandler() {
 		super();
 		Log.i("ProgrammeHandler", "Creating handler...");
-		this.channels = new HashMap<Channel, List<Programme>>();
-		format = new SimpleDateFormat("yyyyMMddHHmmss ZZZZZ");
-		format.setLenient(false);
+		this.channels = new HashMap<Channel, List<Programme>>();		
+		FORMAT.setLenient(false);
 		Log.i("ProgrammeHandler", "Created...");
 	}
 	
@@ -90,9 +89,8 @@ class ProgrammeHandler extends DefaultHandler {
 		if (localName.equals(PROGRAMME)) {
 			currentProgramme = new Programme();
 			try {
-				currentProgramme.start = moveIfDaylightsaving(format.parse(atts.getValue("start")));
-				currentProgramme.stop = moveIfDaylightsaving(format.parse(atts.getValue("stop")));
-				currentProgramme.vps = atts.getValue("vps");
+				currentProgramme.start = moveIfDaylightsaving(FORMAT.parse(atts.getValue("start")));
+				currentProgramme.stop = moveIfDaylightsaving(FORMAT.parse(atts.getValue("stop")));				
 				processingChannel.id = atts.getValue("channel");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block

@@ -1,10 +1,12 @@
 package cz.krtinec.telka;
 
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.app.AlarmManager;
@@ -28,7 +30,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -37,10 +38,11 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import cz.krtinec.telka.dto.Channel;
 import cz.krtinec.telka.dto.Programme;
-import cz.krtinec.telka.provider.ProgrammeProvider;
 import cz.krtinec.telka.ui.ProgrammeView;
 import cz.krtinec.telka.ui.ScrollableListView;
 import cz.krtinec.telka.ui.TelkaPreferences;
+
+import static cz.krtinec.telka.Constants.CZECH;
 
 public class Main extends ListActivity {
 	private static final String CURRENT_CHANNEL_KEY = "currentChannel";
@@ -131,7 +133,7 @@ public class Main extends ListActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-//		Debug.stopMethodTracing();		
+		//Debug.stopMethodTracing();		
 	}
 
 
@@ -187,7 +189,7 @@ public class Main extends ListActivity {
 		public StartupThread(Context context) {
 			this.context = context;
 			String sInterval = PreferenceManager.getDefaultSharedPreferences(context).getString("reload.interval", "6");
-			this.reloadInterval = Integer.parseInt(sInterval) * 60 * 1000;
+			this.reloadInterval = Integer.parseInt(sInterval) * 60 * 60 * 1000;
 		}
 
 		@Override
@@ -200,7 +202,8 @@ public class Main extends ListActivity {
 	        
 	        Arrays.sort(channels, new Comparator<Channel>() {
 				public int compare(Channel o1, Channel o2) {
-					return o1.displayName.compareTo(o2.displayName);
+					Collator c = Collator.getInstance(CZECH);
+					return c.compare(o1.displayName, o2.displayName);
 				}       
 	        });
 	        handler.post(new Runnable() {

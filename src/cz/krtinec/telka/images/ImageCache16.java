@@ -1,4 +1,4 @@
-package cz.krtinec.telka;
+package cz.krtinec.telka.images;
 
 import java.io.IOException;
 import java.io.InputStream;
