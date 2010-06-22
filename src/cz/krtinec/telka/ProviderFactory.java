@@ -1,6 +1,5 @@
 package cz.krtinec.telka;
 
-import java.util.List;
 
 import android.content.Context;
 

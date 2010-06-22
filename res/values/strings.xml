@@ -12,4 +12,6 @@
 <string name="pref_notif_interval">Jak dlouho před pořadem upozornit?</string>
 <string name="preferences">Nastavení</string>
 
+<string name="network_error">Telka nemůže najít připojení k internetu a nemá programy uložené v paměti!\r\nPřipojte se k internetu a zkuste to znovu.</string>
+<string name="ok">Ok</string>
 </resources>

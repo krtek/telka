@@ -61,9 +61,10 @@ public class ImageCache {
 			
 			HttpResponse response = httpClient.execute(httpGet);
 			InputStream content = response.getEntity().getContent();
-			Drawable d = Drawable.createFromStream(content, "src");	
-			content.close();
+			Drawable d = Drawable.createFromStream(content, "src");
 			
+			content.close();
+			httpGet.abort();
 			return d;
 
 		} catch (IOException e) {

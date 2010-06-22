@@ -37,6 +37,7 @@ import cz.krtinec.telka.dto.Programme;
 public class ProgrammeProvider implements IProgrammeProvider {
 		
 	private static final String CACHE_FILENAME = "program.cache";
+	private static final String CACHE_TIMESTAMP = "program.timestamp";
 	private static final String CLASS_NAME = ProgrammeProvider.class.getSimpleName();
 	private ChannelCacheHolder holder = null;
 	private Context context = null;
@@ -104,13 +105,18 @@ public class ProgrammeProvider implements IProgrammeProvider {
 
 	private ChannelCacheHolder loadChannels(int reloadInterval) {
 		Log.i(CLASS_NAME, "ReloadInterval: " + reloadInterval);
-		try {			
-			ObjectInputStream ois = new ObjectInputStream(context.openFileInput(CACHE_FILENAME));
-			ChannelCacheHolder holder = (ChannelCacheHolder) ois.readObject();
-			Log.i(CLASS_NAME, "Programme loaded from cache.");
-			long interval = System.currentTimeMillis() - holder.timestamp;
+		try {	
+			ObjectInputStream ois = new ObjectInputStream(context.openFileInput(CACHE_TIMESTAMP));
+			long timestamp = ois.readLong();
+			ois.close();
+			
+			long interval = System.currentTimeMillis() - timestamp;
 			if (interval < reloadInterval) {
-				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], reusing.");
+				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], going to reuse.");
+				ois = new ObjectInputStream(context.openFileInput(CACHE_FILENAME));
+				ChannelCacheHolder holder = (ChannelCacheHolder) ois.readObject();
+				ois.close();
+				Log.i(CLASS_NAME, "Programme loaded from cache.");
 				return holder;				
 			} else {
 				Log.i(CLASS_NAME, "Last reloaded before " + interval + " [ms], going to load again.");
@@ -135,8 +141,13 @@ public class ProgrammeProvider implements IProgrammeProvider {
 			MalformedURLException, SAXException, FileNotFoundException {
 		Map<Channel, List<Programme>> channels = loadChannelsFromNet();
 		ChannelCacheHolder holder = new ChannelCacheHolder(channels, System.currentTimeMillis());
+		long timestamp = System.currentTimeMillis();
 		ObjectOutputStream oos = new ObjectOutputStream(context.openFileOutput(CACHE_FILENAME, Context.MODE_PRIVATE));
 		oos.writeObject(holder);
+		oos.close();
+		oos = new ObjectOutputStream(context.openFileOutput(CACHE_TIMESTAMP, Context.MODE_PRIVATE));
+		oos.writeLong(timestamp);
+		oos.close();
 		Log.i(CLASS_NAME, "Programme stored to cache.");
 		return holder;
 	}
@@ -148,10 +159,10 @@ public class ProgrammeProvider implements IProgrammeProvider {
 		uc.setDoInput(true);
 		uc.setDoOutput(true);
 		InputStream is = uc.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is, new Windows1250()));
+		BufferedReader br = new BufferedReader(new InputStreamReader(is, new Windows1250()), 8096*4);
 		ProgrammeHandler handler = new ProgrammeHandler();
 		long start = System.currentTimeMillis();
-		Xml.parse(br, handler);
+		Xml.parse(br, handler);	
 		long stop = System.currentTimeMillis();
 		Log.i(CLASS_NAME, "Parsed in " + (stop - start) + " millis");
 		Map <Channel, List<Programme>> channels = handler.getChannels();
@@ -165,7 +176,6 @@ public class ProgrammeProvider implements IProgrammeProvider {
 			Log.e(CLASS_NAME, "Reload failed");
 		} 
 	}
-
 }
 
 class ChannelCacheHolder implements Serializable {

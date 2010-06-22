@@ -1,4 +1,4 @@
-package cz.krtinec.telka;
+package cz.krtinec.telka.ui;
 
 import java.text.Collator;
 import java.util.Arrays;
@@ -10,11 +10,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,11 +38,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import cz.krtinec.telka.AlarmReceiver;
+import cz.krtinec.telka.CannotLoadProgrammeException;
+import cz.krtinec.telka.Constants;
+import cz.krtinec.telka.IProgrammeProvider;
+import cz.krtinec.telka.ProviderFactory;
+import cz.krtinec.telka.R;
+import cz.krtinec.telka.R.drawable;
+import cz.krtinec.telka.R.id;
+import cz.krtinec.telka.R.layout;
+import cz.krtinec.telka.R.string;
 import cz.krtinec.telka.dto.Channel;
 import cz.krtinec.telka.dto.Programme;
-import cz.krtinec.telka.ui.ProgrammeView;
-import cz.krtinec.telka.ui.ScrollableListView;
-import cz.krtinec.telka.ui.TelkaPreferences;
 
 import static cz.krtinec.telka.Constants.CZECH;
 
@@ -196,26 +205,41 @@ public class Main extends ListActivity {
 		public void run() {
 	        provider = ProviderFactory.getProvider(context);
 	        
-	        final Collection<Channel> enabledChannels = provider.getEnabledChannels(this.reloadInterval);
-			channels = enabledChannels.toArray(
-	        		new Channel[enabledChannels.size()]);
-	        
-	        Arrays.sort(channels, new Comparator<Channel>() {
-				public int compare(Channel o1, Channel o2) {
-					Collator c = Collator.getInstance(CZECH);
-					return c.compare(o1.displayName, o2.displayName);
-				}       
-	        });
+	       
 	        handler.post(new Runnable() {
 
 				public void run() {
-			        channel = (TextView) findViewById(R.id.channel);
-			        channel.setText(channels[currentChannel].displayName);               
-			        setListAdapter(new TVListAdapter(context, provider.getProgrammes(channels[currentChannel])));
-			        ((ScrollableListView)findViewById(android.R.id.list)).setGestureDetector(detector);
-			        scrollToCurrentTime((ListView)findViewById(android.R.id.list), provider.nowPlaying(channels[currentChannel]));
-			        registerForContextMenu((ListView)findViewById(android.R.id.list));
-			        dialog.cancel();
+					try {
+						final Collection<Channel> enabledChannels = provider.getEnabledChannels(reloadInterval);
+						channels = enabledChannels.toArray(
+				        		new Channel[enabledChannels.size()]);
+				        
+				        Arrays.sort(channels, new Comparator<Channel>() {
+							public int compare(Channel o1, Channel o2) {
+								Collator c = Collator.getInstance(CZECH);
+								return c.compare(o1.displayName, o2.displayName);
+							}       
+				        });
+				        channel = (TextView) findViewById(R.id.channel);
+				        channel.setText(channels[currentChannel].displayName);               
+				        setListAdapter(new TVListAdapter(context, provider.getProgrammes(channels[currentChannel])));				        
+						
+				        ((ScrollableListView)findViewById(android.R.id.list)).setGestureDetector(detector);
+				        scrollToCurrentTime((ListView)findViewById(android.R.id.list), provider.nowPlaying(channels[currentChannel]));
+				        registerForContextMenu((ListView)findViewById(android.R.id.list));				        
+					} catch (CannotLoadProgrammeException e) {
+						new AlertDialog.Builder(context).setMessage(R.string.network_error).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+														
+							public void onClick(DialogInterface i, int j) {
+								i.cancel();	
+								//have no cache and no internet access - giving up :-)
+								finish();								
+							}
+						}).show();
+					} finally {
+						dialog.cancel();
+						
+					}
 				}
 	        	
 	        });
@@ -297,5 +321,5 @@ class TVListAdapter extends BaseAdapter {
 			((ProgrammeView)convertView).setProgramme(list.get(position));
 			return convertView;
 		}
-	}  
+	} 	
 }

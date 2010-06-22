@@ -11,6 +11,11 @@ public class Channel implements Serializable {
 		this.id = id;		
 	}
 	
+	public Channel (String id, String displayName) {
+		this.id = id;
+		this.displayName = displayName;
+	}
+	
 	@Override
 	public String toString() {
 		return id;

@@ -1,8 +1,5 @@
 package cz.krtinec.telka.provider;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -31,7 +30,8 @@ class ProgrammeHandler extends DefaultHandler {
 	private Channel processingChannel = new Channel("null");
 	private String element;
 	//2009041523250 +0100
-	private static final DateFormat FORMAT = new SimpleDateFormat("yyyyMMddHHmmss ZZZZZ");
+	//private static final DateFormat FORMAT = new SimpleDateFormat("yyyyMMddHHmmss ZZZZZ");
+	private static final DateTimeFormatter FORMAT = DateTimeFormat.forPattern("yyyyMMddHHmmss Z");
 	
 	private static final boolean DLS = TimeZone.getDefault().inDaylightTime(new Date());	
 	
@@ -39,7 +39,7 @@ class ProgrammeHandler extends DefaultHandler {
 		super();
 		Log.i("ProgrammeHandler", "Creating handler...");
 		this.channels = new HashMap<Channel, List<Programme>>();		
-		FORMAT.setLenient(false);
+		//FORMAT.setLenient(false);
 		Log.i("ProgrammeHandler", "Created...");
 	}
 	
@@ -88,14 +88,14 @@ class ProgrammeHandler extends DefaultHandler {
 		element = localName;
 		if (localName.equals(PROGRAMME)) {
 			currentProgramme = new Programme();
-			try {
-				currentProgramme.start = moveIfDaylightsaving(FORMAT.parse(atts.getValue("start")));
-				currentProgramme.stop = moveIfDaylightsaving(FORMAT.parse(atts.getValue("stop")));				
+//			try {
+				currentProgramme.start = moveIfDaylightsaving(FORMAT.parseDateTime(atts.getValue("start")).toDate());
+				currentProgramme.stop = moveIfDaylightsaving(FORMAT.parseDateTime(atts.getValue("stop")).toDate());				
 				processingChannel.id = atts.getValue("channel");
-			} catch (ParseException e) {
+//			} catch (ParseException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//				e.printStackTrace();
+//			}
 		} else if (localName.equals(CHANNEL)) {
 			currentChannel = new Channel(atts.getValue("id"));
 			
